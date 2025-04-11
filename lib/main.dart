@@ -1,135 +1,339 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
+  final Map<String, Map<String, String>> markdownSections = {
+    'Model-Based Development': {
+      'Overview': 'Model_Based_Development/mbd.md',
+      'Simulink': 'Model_Based_Development/simulink.md',
+      'Stateflow': 'Model_Based_Development/stateflow.md',
+      'MIL': 'Model_Based_Development/MIL.md',
+      'SIL': 'Model_Based_Development/SIL.md',
+      'TLC': 'Model_Based_Development/TLC.md',
+    },
+    'AUTOSAR & RTE': {
+      'Overview': 'AUTOSAR_RTE/autosar.md',
+      'RTE': 'AUTOSAR_RTE/rte.md',
+      'SWC': 'AUTOSAR_RTE/swc.md',
+      'ComStack': 'AUTOSAR_RTE/comstack.md',
+      'Interfaces': 'AUTOSAR_RTE/interfaces.md',
+    },
+    'Code-Based Development': {
+      'Overview': 'Code_Based_Development/cbd.md',
+      'Embedded C': 'Code_Based_Development/embeddedc.md',
+    },
+    'Software Quality': {
+      'Overview': 'Software_Quality/sqss.md',
+      'ISO 26262': 'Software_Quality/ISO-26262.md',
+      'MISRA-C': 'Software_Quality/MISRA_C_Guidelines.md',
+      'Polyspace': 'Software_Quality/polyspace.md',
+      'SonarQube': 'Software_Quality/sonarqube.md',
+    },
+    'Testing & Safety': {
+      'GTest': 'Testing_Safety/gtest.md',
+      'Testing': 'Testing_Safety/testing.md',
+      'Safety Standards': 'Testing_Safety/safety_standards.md',
+      'JIRA': 'Testing_Safety/jira.md',
+    },
+    'Tools & Scripting': {
+      'Overview': 'Tools_Scripting/tools.md',
+      'MATLAB': 'Tools_Scripting/matlab.md',
+      'M-Scripting': 'Tools_Scripting/mscripting.md',
+      'Git': 'Tools_Scripting/git.md',
+      'VSCode': 'Tools_Scripting/vscode.md',
+    },
+    'System Design': {
+      'Overview': 'System_Design/system.md',
+      'MagicDraw': 'System_Design/magicdraw_qna.md',
+      'PREEvision': 'System_Design/preevision_qna.md',
+      'Zonal Architecture': 'System_Design/zonal_architecture_qna.md',
+    },
+    'Other': {
+      'Feedback': 'feedback.md',
+      'Contact': 'contacts.md',
+      'Coming Soon': 'coming_soon.md',
+    },
+  };
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'AutoDev Vault',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.pinkAccent),
         useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        cardTheme: CardTheme(
+          color: Colors.black.withOpacity(0.6),
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        textTheme: ThemeData.dark().textTheme.copyWith(
+          titleLarge: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.yellow,
+          ),
+          bodyMedium: const TextStyle(fontSize: 14, color: Colors.white70),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.pink,
+          secondary: Colors.yellow,
+          background: Color(0xFF121212),
+        ),
       ),
-      home: HomePage(fileName: 'MBD.md'),
+      home: HomePage(markdownSections: markdownSections),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  final String fileName;
+class HomePage extends StatelessWidget {
+  final Map<String, Map<String, String>> markdownSections;
 
-  HomePage({required this.fileName});
+  const HomePage({super.key, required this.markdownSections});
 
-  @override
-  _HomePageState createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  late Future<String> markdownContent;
-
-  @override
-  void initState() {
-    super.initState();
-    markdownContent = loadMarkdownFromWeb(widget.fileName);
-  }
-
-  Future<String> loadMarkdownFromWeb(String fileName) async {
-    final url =
-        'https://mahija07.github.io/Automotive_MBD_questionnaire/$fileName';
-    final response = await http.get(Uri.parse(url));
-    if (response.statusCode == 200) {
-      return response.body;
-    } else {
-      return '# Error\nCould not load the content.';
-    }
-  }
-
-  void navigateTo(String fileName) {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage(fileName: fileName)),
-    );
-  }
-
-  void launchLinkedIn() async {
-    final uri = Uri.parse('https://www.linkedin.com/in/mahijaverma/');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+  void _launchURL(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw 'Could not launch $url';
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    https: //github.com/Mahija07/Automotive_MBD_questionnaire/tree/Model_Based_Development_QnA/docs
-
     return Scaffold(
-      appBar: AppBar(
-        title: Text('AutoDev Vault 💡'),
-        backgroundColor: Colors.pinkAccent,
-      ),
+      appBar: AppBar(title: const Text('AutoDev Vault')),
       drawer: Drawer(
         child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(color: Colors.pink),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '🔧 Navigation',
-                    style: TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  SizedBox(height: 10),
-                  Text('by Mahija 💖', style: TextStyle(color: Colors.white70)),
-                ],
+              child: Text(
+                'Navigation',
+                style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
             ListTile(
-              title: Text('Model-Based Dev'),
-              onTap: () => navigateTo('MBD.md'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
+              onTap: () => Navigator.pop(context),
+            ),
+            ...markdownSections.entries.expand(
+              (category) => [
+                ExpansionTile(
+                  leading: const Icon(Icons.folder),
+                  title: Text(category.key),
+                  children:
+                      category.value.entries.map((entry) {
+                        return ListTile(
+                          title: Text(entry.key),
+                          onTap: () {
+                            Navigator.pop(context);
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => MarkdownScreen(
+                                      filename: entry.value,
+                                      title: entry.key,
+                                    ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                ),
+              ],
             ),
             ListTile(
-              title: Text('Code-Based Dev'),
-              onTap: () => navigateTo('CBD.md'),
+              leading: const Icon(Icons.code),
+              title: const Text('GitHub'),
+              onTap: () => _launchURL('https://github.com/Mahija07'),
             ),
             ListTile(
-              title: Text('Stateflow Q&A'),
-              onTap: () => navigateTo('Stateflow.md'),
-            ),
-            ListTile(
-              title: Text('GTest Q&A'),
-              onTap: () => navigateTo('GTest.md'),
-            ),
-            ListTile(
-              title: Text('Feedback (LinkedIn)'),
-              onTap: () => navigateTo('feedback.md'),
+              leading: const Icon(Icons.link),
+              title: const Text('LinkedIn'),
+              onTap: () => _launchURL('https://linkedin.com/in/mahija07'),
             ),
           ],
         ),
       ),
-      body: FutureBuilder<String>(
-        future: markdownContent,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: Colors.pink));
-          } else if (snapshot.hasError) {
-            return Center(child: Text('❌ Error loading content'));
-          } else {
-            return Markdown(
-              data: snapshot.data!,
-              styleSheet: MarkdownStyleSheet(
-                h1: TextStyle(color: Colors.red, fontSize: 24),
-                p: TextStyle(fontSize: 16),
-                listBullet: TextStyle(color: Colors.deepPurple),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Card(
+            color: Colors.pink.shade800,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'Welcome to AutoDev Vault by Mahija',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellow,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'A curated hub of technical Q&A for Automotive Software Engineers. Dive deep into Model-Based Design, AUTOSAR, Testing, Safety, Scripting, and more — all in one place.',
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'Technical Skills Covered:',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.pinkAccent,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          ...markdownSections.entries.map((category) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Card(
+                child: ExpansionTile(
+                  title: Text(
+                    category.key,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.amberAccent,
+                    ),
+                  ),
+                  children:
+                      category.value.entries.map((entry) {
+                        return ListTile(
+                          title: Text(
+                            entry.key,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          trailing: const Icon(
+                            Icons.arrow_forward_ios,
+                            size: 16,
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => MarkdownScreen(
+                                      filename: entry.value,
+                                      title: entry.key,
+                                    ),
+                              ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                ),
               ),
             );
-          }
-        },
+          }).toList(),
+          const SizedBox(height: 40),
+          Center(
+            child: Column(
+              children: const [
+                Text(
+                  'Made with ❤️ by Mahija',
+                  style: TextStyle(color: Colors.white54),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Contact: linkedin.com/in/mahija07 | GitHub: github.com/Mahija07',
+                  style: TextStyle(fontSize: 12, color: Colors.white38),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
+        ],
       ),
+    );
+  }
+}
+
+class MarkdownScreen extends StatelessWidget {
+  final String filename;
+  final String title;
+
+  const MarkdownScreen({
+    super.key,
+    required this.filename,
+    required this.title,
+  });
+
+  Future<String> loadMarkdown() async {
+    return await rootBundle.loadString('assets/md/$filename');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<String>(
+      future: loadMarkdown(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: const Center(child: CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: const Center(child: Text('Error loading markdown file')),
+          );
+        } else {
+          return Scaffold(
+            appBar: AppBar(title: Text(title)),
+            body: Markdown(
+              data: snapshot.data!,
+              styleSheet: MarkdownStyleSheet.fromTheme(
+                Theme.of(context),
+              ).copyWith(
+                p: const TextStyle(fontSize: 15, height: 1.6),
+                h2: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.pinkAccent,
+                ),
+                h3: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.amberAccent,
+                ),
+                blockquote: TextStyle(
+                  color: Colors.grey.shade400,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }

@@ -58,6 +58,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+  -  assets/images/car.png
+  -  assets/md/AUTOSAR_RTE/
+  -  assets/md/Code_Based_Development/
+  -  assets/md/Model_Based_Development/
+  -  assets/md/Software_Quality/
+  -  assets/md/System_Design/
+  -  assets/md/Testing_Safety/
+  -  assets/md/Tools_Scripting/
+  -  assets/md/feedback.md
+  -  assets/md/contacts.md
+  -  assets/md/coming_soon.md
 
   # To add assets to your application, add an assets section, like this:
   # assets:
