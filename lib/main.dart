@@ -181,91 +181,61 @@ class HomePage extends StatelessWidget {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    'Welcome to AutoDev Vault by Mahija',
+                    'Welcome to AutoDev Vault 🚗',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: Colors.yellow,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  SizedBox(height: 12),
                   Text(
-                    'A curated hub of technical Q&A for Automotive Software Engineers. Dive deep into Model-Based Design, AUTOSAR, Testing, Safety, Scripting, and more — all in one place.',
+                    'This app is your companion for exploring and mastering the Automotive Software Development domain. Whether you’re into Model-Based Design, AUTOSAR, Safety, or Testing — it’s all here.',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   SizedBox(height: 16),
                   Text(
-                    'Technical Skills Covered:',
+                    '🔧 Key Areas Covered:',
                     style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          ...markdownSections.entries.map((category) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12.0),
-              child: Card(
-                child: ExpansionTile(
-                  title: Text(
-                    category.key,
-                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.amberAccent,
                     ),
                   ),
-                  children:
-                      category.value.entries.map((entry) {
-                        return ListTile(
-                          title: Text(
-                            entry.key,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                          trailing: const Icon(
-                            Icons.arrow_forward_ios,
-                            size: 16,
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder:
-                                    (context) => MarkdownScreen(
-                                      filename: entry.value,
-                                      title: entry.key,
-                                    ),
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                ),
+                  SizedBox(height: 8),
+                  Text(
+                    '• Model-Based Development (Simulink, Stateflow, MIL/SIL)',
+                  ),
+                  Text('• AUTOSAR & RTE'),
+                  Text('• Embedded C and Code-Based Development'),
+                  Text('• Software Quality (MISRA C, Polyspace, ISO 26262)'),
+                  Text('• Testing Tools (GTest, JIRA)'),
+                  Text('• System Design (MagicDraw, PREEvision)'),
+                ],
               ),
-            );
-          }).toList(),
-          const SizedBox(height: 40),
+            ),
+          ),
+          const SizedBox(height: 24),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: Image.asset(
+              'assets/images/car.png', // 👈 Make sure this image exists
+              height: 200,
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(height: 32),
           Center(
             child: Column(
               children: const [
                 Text(
                   'Made with ❤️ by Mahija',
-                  style: TextStyle(color: Colors.white54),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  'Contact: linkedin.com/in/mahija07 | GitHub: github.com/Mahija07',
-                  style: TextStyle(fontSize: 12, color: Colors.white38),
+                  style: TextStyle(color: Colors.white54, fontSize: 14),
                 ),
               ],
             ),
