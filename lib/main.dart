@@ -54,11 +54,7 @@ class MyApp extends StatelessWidget {
       'PREEvision': 'System_Design/preevision_qna.md',
       'Zonal Architecture': 'System_Design/zonal_architecture_qna.md',
     },
-    'Other': {
-      'Feedback': 'feedback.md',
-      'Contact': 'contacts.md',
-      'Coming Soon': 'coming_soon.md',
-    },
+    'coming soon': {'Coming Soon': 'coming_soon.md'},
   };
 
   @override
@@ -121,7 +117,7 @@ class HomePage extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.pink),
+              decoration: BoxDecoration(color: Colors.black),
               child: Text(
                 'Navigation',
                 style: TextStyle(color: Colors.white, fontSize: 24),
@@ -176,7 +172,7 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            color: Colors.pink.shade800,
+            color: Colors.black12,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),
@@ -225,7 +221,7 @@ class HomePage extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             child: Image.asset(
               'assets/images/car.png', // 👈 Make sure this image exists
-              height: 200,
+              height: 400,
               fit: BoxFit.cover,
             ),
           ),
