@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'markdown_screen.dart';
+import 'package:lottie/lottie.dart';
 
 void main() {
   runApp(MyApp());
@@ -182,11 +184,11 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
                   Text(
-                    'Welcome to AutoDev Vault 🚗',
+                    'Welcome to AutoDev Vault 🚗🤖',
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: Colors.yellow,
+                      color: Colors.pinkAccent,
                     ),
                   ),
                   SizedBox(height: 12),
@@ -200,7 +202,7 @@ class HomePage extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.amberAccent,
+                      color: Colors.pinkAccent,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -217,23 +219,17 @@ class HomePage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 24),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: Image.asset(
-              'assets/images/car.png', // 👈 Make sure this image exists
-              height: 400,
-              fit: BoxFit.cover,
-            ),
+          // 🚀 Lottie Animation Instead of Image
+          Lottie.asset(
+            'assets/animations/Animation.json',
+            height: 300,
+            fit: BoxFit.contain,
           ),
           const SizedBox(height: 32),
-          Center(
-            child: Column(
-              children: const [
-                Text(
-                  'Made with ❤️ by Mahija',
-                  style: TextStyle(color: Colors.white54, fontSize: 14),
-                ),
-              ],
+          const Center(
+            child: Text(
+              'Made with ❤️ by Mahija',
+              style: TextStyle(color: Colors.white54, fontSize: 14),
             ),
           ),
           const SizedBox(height: 20),
