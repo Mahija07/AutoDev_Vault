@@ -3,7 +3,7 @@
 An **Electronic Control Unit (ECU)** is an embedded system in automotive electronics that controls one or more electrical systems or subsystems in a vehicle. Think of it as the **brain** for specific functions—like managing the engine, brakes, lights, or airbags.
 
 ---
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ### 📌 **Why are ECUs used in vehicles?**
 

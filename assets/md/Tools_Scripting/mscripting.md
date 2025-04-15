@@ -1,7 +1,7 @@
 # 📚 M SCRIPTING 
 
 ### 💡 **What is M-Scripting (MATLAB Scripting)?**
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 M-scripting refers to writing code in **MATLAB using `.m` files**, which include scripts and functions. It allows for:
 - Data processing

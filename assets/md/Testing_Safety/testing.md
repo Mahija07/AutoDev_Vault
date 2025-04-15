@@ -1,6 +1,6 @@
 # 📚 Testing & Safety
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 let's dive into the **levels of testing** for a vehicle and understand how **Q1, Q2, and Q3** testing levels are defined in automotive development. These levels represent the **depth of testing** and focus areas based on the system or subsystem being tested.
 

@@ -1,6 +1,6 @@
 # 📚 Tools & Scripting
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 # 🧰 Tools & Scripting (MATLAB, Python, Linux, Git, JIRA)
 

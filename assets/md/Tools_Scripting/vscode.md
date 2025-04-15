@@ -1,7 +1,7 @@
 # 📚 VS CODE 
 
 ### 💡 **VS Code – What, When, Where, Why, How, and Benefits**
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ---
 

@@ -244,4 +244,4 @@ By using protected models, model referencing, and encrypted subsystems.
 
 **50. What is the purpose of dashboards and how are they used for tuning?**  
 Dashboards allow real-time tuning of parameters during simulation and help visualize system behavior dynamically.
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+

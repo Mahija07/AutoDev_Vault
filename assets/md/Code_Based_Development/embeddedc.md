@@ -1,6 +1,6 @@
 # 📚 EMBEDDED C
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ### 🧠 **What is Embedded C?**
 

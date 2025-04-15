@@ -406,4 +406,3 @@ Linux-based systems in automotive applications provide a robust platform for dev
 50. Q: How is automotive Ethernet integrated into Linux?
     A: Via kernel drivers supporting Ethernet PHYs and user-space tools for diagnostics and traffic control.
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>

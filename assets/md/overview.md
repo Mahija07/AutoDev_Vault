@@ -1,7 +1,7 @@
 Let’s break this down like a **real automotive engineering lifecycle + functional runtime flow**, covering **what happens, when, how, and where** in a detailed and structured way. 🔍🚘
 
 ---
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ## 🚗 END-TO-END VEHICLE DEVELOPMENT & OPERATIONAL WORKFLOW
 

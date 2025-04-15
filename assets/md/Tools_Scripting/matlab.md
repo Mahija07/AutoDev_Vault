@@ -1,7 +1,7 @@
 # 📚 MATLAB 
 
 ### 💡 **What is MATLAB?**
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 **MATLAB** (Matrix Laboratory) is a high-level programming and numeric computing platform used for data analysis, algorithm development, modeling, simulation, and prototyping.
 

@@ -368,4 +368,3 @@ It ensures that test execution doesn’t stop abruptly, logs are captured proper
 **50. How can you ensure traceability in Python-based automotive test scripts?**  
 By tagging each test with unique IDs (linked to requirements), maintaining mapping tables, logging results with IDs, and integrating results into ALM tools like DOORS or Polarion.
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>

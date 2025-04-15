@@ -1,6 +1,6 @@
 ### **Communication Protocols in Automotive Systems: Overview**
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 Communication protocols in automotive systems are essential for enabling different Electronic Control Units (ECUs) within a vehicle to exchange data. With increasing complexity in modern vehicles, having efficient communication protocols allows for the coordination of various systems such as engine control, safety systems, infotainment, and advanced driver-assistance systems (ADAS).
 
 ---

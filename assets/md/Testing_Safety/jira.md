@@ -1,7 +1,7 @@
 # 📚 JIRA 
 
 ### ✅ **What is JIRA?**
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 **JIRA** is a project management and issue tracking tool developed by Atlassian. It is widely used to **track bugs, plan sprints, manage tasks**, and visualize progress, especially in **Agile/Scrum-based software development** environments.
 

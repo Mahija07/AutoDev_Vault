@@ -4,7 +4,7 @@
 
 **Google Test (GTest)** is a powerful **C++ unit testing framework** developed by Google.  
 It lets developers write **automated test cases** to check the correctness of their C++ code — class functions, modules, and behaviors.
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ---
 

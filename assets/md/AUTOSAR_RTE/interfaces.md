@@ -2,7 +2,7 @@
 
 ### 🌐 **What are AUTOSAR Interfaces?**
 AUTOSAR Interfaces define **how data and services are exchanged** between Software Components (SWCs), Basic Software (BSW), or external systems within the AUTOSAR layered architecture.
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ---
 

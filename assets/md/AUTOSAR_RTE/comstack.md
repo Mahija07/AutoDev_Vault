@@ -1,7 +1,7 @@
 # 📚 COMSTACK 
 
 ### 🚘 What is COM Stack in Automotive?
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 The **COM Stack** in AUTOSAR is a layered software architecture that handles communication within the ECU and between ECUs over vehicle networks like CAN, LIN, FlexRay, and Ethernet.
 

@@ -1,7 +1,7 @@
 # 📚 RTE 
 
 ### 🚦 What is RTE in AUTOSAR?
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 **RTE (Runtime Environment)** is the middleware layer in AUTOSAR Classic Platform that acts as a communication interface between:
 

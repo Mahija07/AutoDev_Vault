@@ -1,6 +1,6 @@
 ## 🚗 Vehicle Architecture – Overview
 
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 ### 📘 What is Vehicle Architecture?
 Vehicle Architecture refers to the **overall structural and functional layout** of all electronic, mechanical, and software systems within a vehicle. It encompasses **how different ECUs, sensors, actuators, networks, and software modules** are organized and interact to deliver vehicle functionality.
 

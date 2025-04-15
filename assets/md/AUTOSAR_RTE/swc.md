@@ -1,7 +1,7 @@
 # 📚 SWC's 
 
 ### 🚘 What are AUTOSAR SWCs?
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 **AUTOSAR Software Components (SWCs)** are modular software units defined in the AUTOSAR architecture, encapsulating specific functionality like signal processing, diagnostics, or communication.
 

@@ -1,7 +1,7 @@
 # 📚 SAFETY STANDARDS 
 
 ### ✅ **What are Safety Standards?**
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 Safety standards in automotive software define structured processes and guidelines to ensure the **functional safety**, **reliability**, and **compliance** of electronic systems and software in vehicles.
 

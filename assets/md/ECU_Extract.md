@@ -1,7 +1,7 @@
 In the **automotive development phase**, an **ECU Extract** refers to a **subset of system-level information** derived from the **System Extract (SYS Extract)** or **Vehicle Architecture**, focusing **only on one specific ECU**.
 
 ---
-<a class="back-sidebar-btn" href="javascript:history.back()">⬅️ Back</a>
+
 
 ### 🔍 **Definition:**
 An **ECU Extract** is a generated data file (usually in ARXML format in AUTOSAR-based systems) that includes **only the configuration, interfaces, signals, and components relevant to a particular ECU**. It serves as the **input** for the software and configuration development of that ECU.
