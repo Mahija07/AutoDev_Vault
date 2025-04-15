@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
     'Code-Based Development': {
       'Overview': 'Code_Based_Development/cbd.md',
       'Embedded C': 'Code_Based_Development/embeddedc.md',
+      'Python': 'Code_Based_Development/python.md',
     },
     'Software Quality': {
       'Overview': 'Software_Quality/sqss.md',
@@ -49,12 +50,19 @@ class MyApp extends StatelessWidget {
       'M-Scripting': 'Tools_Scripting/mscripting.md',
       'Git': 'Tools_Scripting/git.md',
       'VSCode': 'Tools_Scripting/vscode.md',
+      'Linux': 'Tools_Scripting/linux.md',
     },
     'System Design': {
       'Overview': 'System_Design/system.md',
       'MagicDraw': 'System_Design/magicdraw_qna.md',
       'PREEvision': 'System_Design/preevision_qna.md',
       'Zonal Architecture': 'System_Design/zonal_architecture_qna.md',
+    },
+    'Vehicle Architecture': {
+      'Overview': 'vehicle_architecture.md',
+      'ECU': 'ECU.md',
+      'ECU_Extract': 'ECU_Extract.md',
+      'Communication Protocol': 'communication_protocols.md',
     },
     'coming soon': {'Coming Soon': 'coming_soon.md'},
   };

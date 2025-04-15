@@ -61,7 +61,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-  -  assets/icon.png
+  -  assets/images/logo.png
   -  assets/animations/Animation.json
   -  assets/images/car.png
   -  assets/md/AUTOSAR_RTE/
@@ -74,6 +74,12 @@ flutter:
   -  assets/md/feedback.md
   -  assets/md/contacts.md
   -  assets/md/coming_soon.md
+  -  assets/md/communication_protocols.md
+  -  assets/md/contacts.md
+  -  assets/md/ECU_Extract.md
+  -  assets/md/ECU.md
+  -  assets/md/feedback.md
+  -  assets/md/overview.md
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -109,4 +115,4 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon.png"
+  image_path: "assets/images/logo.png"
