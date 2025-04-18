@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "578993882877",
+    "project_id": "autodev-vault",
+    "storage_bucket": "autodev-vault.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:578993882877:android:4692982e401eeff8afa094",
+        "android_client_info": {
+          "package_name": "com.mahija.autodevvault"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhsp1ndqHzZqSP8Iede0eU6NBsaeN-6PA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

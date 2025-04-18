@@ -2,10 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'markdown_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'home_page.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  try {
+    await Firebase.initializeApp(
+      options:
+          kIsWeb
+              ? const FirebaseOptions(
+                apiKey: "AIzaSyDgX8qo_RxswIqe1pcmkZ2UA4HgSd57z6U",
+                authDomain: "autodev-vault.firebaseapp.com",
+                projectId: "autodev-vault",
+                storageBucket: "autodev-vault.firebasestorage.app",
+                messagingSenderId: "578993882877",
+                appId: "1:578993882877:web:18729eea24e85162afa094",
+                measurementId: "G-QEZWXJHCZS",
+              )
+              : null,
+    );
+  } catch (e) {
+    print('Firebase initialization error: $e');
+  }
+
   runApp(MyApp());
 }
 
@@ -69,39 +92,63 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'AutoDev Vault',
-      theme: ThemeData(
-        useMaterial3: true,
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF121212),
-        cardTheme: CardTheme(
-          color: Colors.black.withOpacity(0.6),
-          elevation: 6,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-        ),
-        textTheme: ThemeData.dark().textTheme.copyWith(
-          titleLarge: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.yellow,
-          ),
-          bodyMedium: const TextStyle(fontSize: 14, color: Colors.white70),
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
-        ),
-        colorScheme: const ColorScheme.dark(
-          primary: Colors.pink,
-          secondary: Colors.yellow,
-          background: Color(0xFF121212),
-        ),
-      ),
-      home: HomePage(markdownSections: markdownSections),
+    return FutureBuilder(
+      future: Firebase.initializeApp(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(
+            home: Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        } else if (snapshot.hasError) {
+          return const MaterialApp(
+            home: Scaffold(
+              body: Center(child: Text('Error initializing Firebase')),
+            ),
+          );
+        } else {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'AutoDev Vault',
+            theme: ThemeData(
+              useMaterial3: true,
+              brightness: Brightness.dark,
+              scaffoldBackgroundColor: const Color(0xFF121212),
+              cardTheme: CardTheme(
+                color: Colors.black.withOpacity(0.6),
+                elevation: 6,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              textTheme: ThemeData.dark().textTheme.copyWith(
+                titleLarge: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.yellow,
+                ),
+                bodyMedium: const TextStyle(
+                  fontSize: 14,
+                  color: Colors.white70,
+                ),
+              ),
+              appBarTheme: const AppBarTheme(
+                backgroundColor: Colors.black,
+                foregroundColor: Colors.white,
+              ),
+              colorScheme: const ColorScheme.dark(
+                primary: Colors.pink,
+                secondary: Colors.yellow,
+                background: Color(0xFF121212),
+              ),
+            ),
+            home: HomePage(markdownSections: markdownSections),
+            routes: {
+              '/home':
+                  (context) => HomePage(markdownSections: markdownSections),
+            },
+          );
+        }
+      },
     );
   }
 }
@@ -173,7 +220,8 @@ class HomePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.link),
               title: const Text('LinkedIn'),
-              onTap: () => _launchURL('https://linkedin.com/in/mahija07'),
+              onTap:
+                  () => _launchURL('https://www.linkedin.com/in/mahija-verma/'),
             ),
           ],
         ),
@@ -282,22 +330,17 @@ class MarkdownScreen extends StatelessWidget {
             body: Markdown(
               data: snapshot.data!,
               styleSheet: MarkdownStyleSheet.fromTheme(
-                Theme.of(context),
-              ).copyWith(
-                p: const TextStyle(fontSize: 15, height: 1.6),
-                h2: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.pinkAccent,
-                ),
-                h3: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.amberAccent,
-                ),
-                blockquote: TextStyle(
-                  color: Colors.grey.shade400,
-                  fontStyle: FontStyle.italic,
+                Theme.of(context).copyWith(
+                  textTheme: Theme.of(context).textTheme.copyWith(
+                    bodyLarge: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 16, // Ensure a valid font size is set
+                    ),
+                    bodyMedium: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 14, // Ensure a valid font size is set
+                    ),
+                  ),
                 ),
               ),
             ),
