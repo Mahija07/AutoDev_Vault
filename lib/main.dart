@@ -6,6 +6,9 @@ import 'package:lottie/lottie.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'home_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'login_page.dart';
+import 'notes_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -309,6 +312,17 @@ class MarkdownScreen extends StatelessWidget {
     return await rootBundle.loadString('assets/md/$filename');
   }
 
+  Future<void> saveToNotes(BuildContext context, String text) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> notes = prefs.getStringList('notes') ?? [];
+    notes.add(text);
+    await prefs.setStringList('notes', notes);
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Added to Notes 📒')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String>(
@@ -334,15 +348,21 @@ class MarkdownScreen extends StatelessWidget {
                   textTheme: Theme.of(context).textTheme.copyWith(
                     bodyLarge: const TextStyle(
                       color: Colors.white70,
-                      fontSize: 16, // Ensure a valid font size is set
+                      fontSize: 16,
                     ),
                     bodyMedium: const TextStyle(
                       color: Colors.white70,
-                      fontSize: 14, // Ensure a valid font size is set
+                      fontSize: 14,
                     ),
                   ),
                 ),
               ),
+            ),
+            floatingActionButton: FloatingActionButton.extended(
+              onPressed: () => saveToNotes(context, title),
+              label: const Text('Bookmark Title'),
+              icon: const Icon(Icons.bookmark_add),
+              backgroundColor: Colors.pink,
             ),
           );
         }
