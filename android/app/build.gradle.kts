@@ -4,7 +4,6 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
-    id("com.android.application")
     id("kotlin-android")
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -25,7 +24,7 @@ android {
 
     defaultConfig {
         applicationId = "com.mahija.autodevvault"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -62,14 +61,7 @@ android {
 flutter {
     source = "../.."
 }
-plugins {
-  id("com.android.application")
 
-  // Add the Google services Gradle plugin
-  id("com.google.gms.google-services")
-
-  ...
-}
 
 dependencies {
   // Import the Firebase BoM

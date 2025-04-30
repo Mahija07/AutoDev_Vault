@@ -9,6 +9,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'login_page.dart';
 import 'notes_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:confetti/confetti.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -105,7 +107,9 @@ class MyApp extends StatelessWidget {
         } else if (snapshot.hasError) {
           return const MaterialApp(
             home: Scaffold(
-              body: Center(child: Text('Error initializing Firebase')),
+              body: Center(
+                child: SelectableText('Error initializing Firebase'),
+              ),
             ),
           );
         } else {
@@ -171,14 +175,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('AutoDev Vault')),
+      appBar: AppBar(title: const SelectableText('AutoDev Vault')),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(color: Colors.black),
-              child: Text(
+              child: SelectableText(
                 'Navigation',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
@@ -223,8 +227,7 @@ class HomePage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.link),
               title: const Text('LinkedIn'),
-              onTap:
-                  () => _launchURL('https://www.linkedin.com/in/mahija-verma/'),
+              onTap: () => _launchURL('www.linkedin.com/in/mahija07/'),
             ),
           ],
         ),
@@ -242,7 +245,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text(
+                  SelectableText(
                     'Welcome to AutoDev Vault 🚗🤖',
                     style: TextStyle(
                       fontSize: 26,
@@ -251,12 +254,12 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 12),
-                  Text(
+                  SelectableText(
                     'This app is your companion for exploring and mastering the Automotive Software Development domain. Whether you’re into Model-Based Design, AUTOSAR, Safety, or Testing — it’s all here.',
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   SizedBox(height: 16),
-                  Text(
+                  SelectableText(
                     '🔧 Key Areas Covered:',
                     style: TextStyle(
                       fontSize: 18,
@@ -265,14 +268,16 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8),
-                  Text(
+                  SelectableText(
                     '• Model-Based Development (Simulink, Stateflow, MIL/SIL)',
                   ),
-                  Text('• AUTOSAR & RTE'),
-                  Text('• Embedded C and Code-Based Development'),
-                  Text('• Software Quality (MISRA C, Polyspace, ISO 26262)'),
-                  Text('• Testing Tools (GTest, JIRA)'),
-                  Text('• System Design (MagicDraw, PREEvision)'),
+                  SelectableText('• AUTOSAR & RTE'),
+                  SelectableText('• Embedded C and Code-Based Development'),
+                  SelectableText(
+                    '• Software Quality (MISRA C, Polyspace, ISO 26262)',
+                  ),
+                  SelectableText('• Testing Tools (GTest, JIRA)'),
+                  SelectableText('• System Design (MagicDraw, PREEvision)'),
                 ],
               ),
             ),
@@ -286,7 +291,7 @@ class HomePage extends StatelessWidget {
           ),
           const SizedBox(height: 32),
           const Center(
-            child: Text(
+            child: SelectableText(
               'Made with ❤️ by Mahija',
               style: TextStyle(color: Colors.white54, fontSize: 14),
             ),
@@ -294,6 +299,86 @@ class HomePage extends StatelessWidget {
           const SizedBox(height: 20),
         ],
       ),
+    );
+  }
+}
+
+class NotesScreen extends StatefulWidget {
+  const NotesScreen({Key? key}) : super(key: key);
+
+  @override
+  _NotesScreenState createState() => _NotesScreenState();
+}
+
+class _NotesScreenState extends State<NotesScreen> {
+  List<String> notes = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadNotes();
+  }
+
+  Future<void> loadNotes() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      notes = prefs.getStringList('notes') ?? [];
+    });
+  }
+
+  Future<void> deleteNoteAt(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    notes.removeAt(index);
+    await prefs.setStringList('notes', notes);
+    loadNotes();
+  }
+
+  Future<void> clearAllNotes() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('notes');
+    loadNotes();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const SelectableText('My Bookmarks ✨'),
+        actions: [
+          if (notes.isNotEmpty)
+            IconButton(
+              icon: const Icon(Icons.delete_forever),
+              tooltip: 'Clear All',
+              onPressed: clearAllNotes,
+            ),
+        ],
+      ),
+      body:
+          notes.isEmpty
+              ? const Center(
+                child: SelectableText(
+                  'No bookmarks yet! 📚',
+                  style: TextStyle(color: Colors.white70),
+                ),
+              )
+              : ListView.separated(
+                itemCount: notes.length,
+                separatorBuilder:
+                    (context, index) => const Divider(color: Colors.white24),
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    leading: const Icon(
+                      Icons.bookmark,
+                      color: Colors.pinkAccent,
+                    ),
+                    title: Text(notes[index]),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.redAccent),
+                      onPressed: () => deleteNoteAt(index),
+                    ),
+                  );
+                },
+              ),
     );
   }
 }
@@ -318,9 +403,9 @@ class MarkdownScreen extends StatelessWidget {
     notes.add(text);
     await prefs.setStringList('notes', notes);
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Added to Notes 📒')));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: SelectableText('Added to Notes 📒')),
+    );
   }
 
   @override
@@ -336,13 +421,16 @@ class MarkdownScreen extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Scaffold(
             appBar: AppBar(title: Text(title)),
-            body: const Center(child: Text('Error loading markdown file')),
+            body: const Center(
+              child: SelectableText('Error loading markdown file'),
+            ),
           );
         } else {
           return Scaffold(
             appBar: AppBar(title: Text(title)),
             body: Markdown(
               data: snapshot.data!,
+              selectable: true,
               styleSheet: MarkdownStyleSheet.fromTheme(
                 Theme.of(context).copyWith(
                   textTheme: Theme.of(context).textTheme.copyWith(
@@ -358,11 +446,158 @@ class MarkdownScreen extends StatelessWidget {
                 ),
               ),
             ),
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () => saveToNotes(context, title),
-              label: const Text('Bookmark Title'),
-              icon: const Icon(Icons.bookmark_add),
-              backgroundColor: Colors.pink,
+            floatingActionButton: Builder(
+              builder:
+                  (context) => FloatingActionButton.extended(
+                    onPressed: () async {
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user == null) {
+                        final result = await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginPage(),
+                          ),
+                        );
+
+                        if (result != 'success') {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: SelectableText(
+                                'You must log in to save bookmarks!',
+                              ),
+                            ),
+                          );
+                          return;
+                        }
+                      }
+
+                      String? noteText = await showDialog<String>(
+                        context: context,
+                        builder: (context) {
+                          TextEditingController controller =
+                              TextEditingController();
+                          return AlertDialog(
+                            title: const SelectableText('Add a Bookmark ✍️'),
+                            content: TextField(
+                              controller: controller,
+                              maxLines: 2,
+                              decoration: const InputDecoration(
+                                hintText: 'Write a short note...',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(context),
+                                child: const Text('Cancel'),
+                              ),
+                              TextButton(
+                                onPressed:
+                                    () =>
+                                        Navigator.pop(context, controller.text),
+                                child: const Text('Save'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                      if (noteText != null && noteText.trim().isNotEmpty) {
+                        final prefs = await SharedPreferences.getInstance();
+                        List<String> notes = prefs.getStringList('notes') ?? [];
+                        notes.add(noteText.trim());
+                        await prefs.setStringList('notes', notes);
+
+                        // 🎉 Show confetti after saving
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) {
+                            ConfettiController _controllerCenter =
+                                ConfettiController(
+                                  duration: const Duration(seconds: 2),
+                                );
+                            _controllerCenter.play(); // Start the confetti!
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              _controllerCenter.stop();
+                              Navigator.of(context).pop(); // Auto close dialog
+                            });
+
+                            return Center(
+                              child: ConfettiWidget(
+                                confettiController:
+                                    _controllerCenter, // 💖 Must provide controller
+                                blastDirectionality:
+                                    BlastDirectionality.explosive,
+                                shouldLoop: false,
+                                numberOfParticles: 30,
+                                colors: const [
+                                  Colors.pinkAccent,
+                                  Colors.yellow,
+                                  Colors.redAccent,
+                                ],
+                                gravity: 0.3,
+                                emissionFrequency: 0.05,
+                                blastDirection: 0,
+                              ),
+                            );
+                          },
+                        );
+
+                        bool goToNotes =
+                            await showDialog<bool>(
+                              context: context,
+                              builder:
+                                  (context) => AlertDialog(
+                                    title: const SelectableText(
+                                      'Bookmark Saved! 📚',
+                                    ),
+                                    content: const SelectableText(
+                                      'Do you want to view your bookmarks now?',
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed:
+                                            () => Navigator.pop(context, false),
+                                        child: const SelectableText(
+                                          'No, stay here',
+                                        ),
+                                      ),
+                                      TextButton(
+                                        onPressed:
+                                            () => Navigator.pop(context, true),
+                                        child: const SelectableText(
+                                          'Yes, show bookmarks',
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            ) ??
+                            false;
+
+                        if (goToNotes) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotesScreen(),
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: SelectableText(
+                                'Bookmark saved successfully! ✅',
+                              ),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    label: const SelectableText('Bookmark Title'),
+                    icon: const Icon(Icons.bookmark_add),
+                    backgroundColor: Colors.pink,
+                  ),
             ),
           );
         }
