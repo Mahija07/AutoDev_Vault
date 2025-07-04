@@ -7,14 +7,55 @@ import 'package:firebase_core/firebase_core.dart';
 import 'home_page.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'login_page.dart';
+import 'LoginPage.dart';
 import 'notes_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:confetti/confetti.dart';
+import 'markdown_screen.dart'; // Update the path
+
+class MarkdownScreen extends StatefulWidget {
+  final String filename;
+  final String? title;
+
+  const MarkdownScreen({Key? key, required this.filename, this.title})
+    : super(key: key);
+
+  @override
+  State<MarkdownScreen> createState() => _MarkdownScreenState();
+}
+
+class _MarkdownScreenState extends State<MarkdownScreen> {
+  String _markdownData = '';
+
+  @override
+  void initState() {
+    super.initState();
+    loadMarkdown();
+  }
+
+  Future<void> loadMarkdown() async {
+    final String data = await rootBundle.loadString(
+      'assets/md/${widget.filename}',
+    );
+    setState(() {
+      _markdownData = data;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title ?? widget.filename)),
+      body:
+          _markdownData.isEmpty
+              ? const Center(child: CircularProgressIndicator())
+              : Markdown(data: _markdownData),
+    );
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   try {
     await Firebase.initializeApp(
       options:
@@ -34,11 +75,23 @@ void main() async {
     print('Firebase initialization error: $e');
   }
 
-  runApp(MyApp());
+  runApp(const AppWrapper());
+}
+
+/// Wrapper handles Firebase check once, avoids reinitialization in MyApp.
+class AppWrapper extends StatelessWidget {
+  const AppWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(debugShowCheckedModeBanner: false, home: MyApp());
+  }
 }
 
 class MyApp extends StatelessWidget {
-  final Map<String, Map<String, String>> markdownSections = {
+  const MyApp({super.key});
+
+  static final Map<String, Map<String, String>> markdownSections = {
     'Model-Based Development': {
       'Overview': 'Model_Based_Development/mbd.md',
       'Simulink': 'Model_Based_Development/simulink.md',
@@ -97,64 +150,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(
-            home: Scaffold(body: Center(child: CircularProgressIndicator())),
-          );
-        } else if (snapshot.hasError) {
-          return const MaterialApp(
-            home: Scaffold(
-              body: Center(
-                child: SelectableText('Error initializing Firebase'),
-              ),
-            ),
-          );
-        } else {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'AutoDev Vault',
-            theme: ThemeData(
-              useMaterial3: true,
-              brightness: Brightness.dark,
-              scaffoldBackgroundColor: const Color(0xFF121212),
-              cardTheme: CardTheme(
-                color: Colors.black.withOpacity(0.6),
-                elevation: 6,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              textTheme: ThemeData.dark().textTheme.copyWith(
-                titleLarge: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.yellow,
-                ),
-                bodyMedium: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.white70,
-                ),
-              ),
-              appBarTheme: const AppBarTheme(
-                backgroundColor: Colors.black,
-                foregroundColor: Colors.white,
-              ),
-              colorScheme: const ColorScheme.dark(
-                primary: Colors.pink,
-                secondary: Colors.yellow,
-                background: Color(0xFF121212),
-              ),
-            ),
-            home: HomePage(markdownSections: markdownSections),
-            routes: {
-              '/home':
-                  (context) => HomePage(markdownSections: markdownSections),
-            },
-          );
-        }
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'AutoDev Vault',
+      theme: ThemeData(
+        useMaterial3: true,
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: const Color(0xFF121212),
+        cardTheme: CardThemeData(
+          color: Colors.black,
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        textTheme: ThemeData.dark().textTheme.copyWith(
+          titleLarge: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.yellow,
+          ),
+          bodyMedium: const TextStyle(fontSize: 14, color: Colors.white70),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.pink,
+          secondary: Colors.yellow,
+          background: Color(0xFF121212),
+        ),
+      ),
+      home: HomePage(markdownSections: markdownSections),
+      routes: {
+        '/home': (context) => HomePage(markdownSections: markdownSections),
       },
     );
   }
@@ -312,11 +342,15 @@ class NotesScreen extends StatefulWidget {
 
 class _NotesScreenState extends State<NotesScreen> {
   List<String> notes = [];
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
     loadNotes();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 1),
+    );
   }
 
   Future<void> loadNotes() async {
@@ -339,6 +373,26 @@ class _NotesScreenState extends State<NotesScreen> {
     loadNotes();
   }
 
+  Future<void> saveToNotes(BuildContext context, String text) async {
+    final prefs = await SharedPreferences.getInstance();
+    List<String> notes = prefs.getStringList('notes') ?? [];
+    notes.add(text);
+    await prefs.setStringList('notes', notes);
+
+    // Trigger confetti on successful addition of a note
+    _confettiController.play();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: SelectableText('Added to Notes 📒')),
+    );
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -353,7 +407,18 @@ class _NotesScreenState extends State<NotesScreen> {
             ),
         ],
       ),
-      body:
+      body: Stack(
+        children: [
+          // Confetti animation overlay
+          ConfettiWidget(
+            confettiController: _confettiController,
+            blastDirectionality: BlastDirectionality.explosive,
+            shouldLoop: false,
+            colors: const [Colors.pink, Colors.yellow, Colors.blue],
+            createParticlePath: (size) {
+              return Path()..lineTo(0, size.height);
+            },
+          ),
           notes.isEmpty
               ? const Center(
                 child: SelectableText(
@@ -379,229 +444,8 @@ class _NotesScreenState extends State<NotesScreen> {
                   );
                 },
               ),
-    );
-  }
-}
-
-class MarkdownScreen extends StatelessWidget {
-  final String filename;
-  final String title;
-
-  const MarkdownScreen({
-    super.key,
-    required this.filename,
-    required this.title,
-  });
-
-  Future<String> loadMarkdown() async {
-    return await rootBundle.loadString('assets/md/$filename');
-  }
-
-  Future<void> saveToNotes(BuildContext context, String text) async {
-    final prefs = await SharedPreferences.getInstance();
-    List<String> notes = prefs.getStringList('notes') ?? [];
-    notes.add(text);
-    await prefs.setStringList('notes', notes);
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: SelectableText('Added to Notes 📒')),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-      future: loadMarkdown(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Scaffold(
-            appBar: AppBar(title: Text(title)),
-            body: const Center(child: CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return Scaffold(
-            appBar: AppBar(title: Text(title)),
-            body: const Center(
-              child: SelectableText('Error loading markdown file'),
-            ),
-          );
-        } else {
-          return Scaffold(
-            appBar: AppBar(title: Text(title)),
-            body: Markdown(
-              data: snapshot.data!,
-              selectable: true,
-              styleSheet: MarkdownStyleSheet.fromTheme(
-                Theme.of(context).copyWith(
-                  textTheme: Theme.of(context).textTheme.copyWith(
-                    bodyLarge: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 16,
-                    ),
-                    bodyMedium: const TextStyle(
-                      color: Colors.white70,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            floatingActionButton: Builder(
-              builder:
-                  (context) => FloatingActionButton.extended(
-                    onPressed: () async {
-                      final user = FirebaseAuth.instance.currentUser;
-                      if (user == null) {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginPage(),
-                          ),
-                        );
-
-                        if (result != 'success') {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: SelectableText(
-                                'You must log in to save bookmarks!',
-                              ),
-                            ),
-                          );
-                          return;
-                        }
-                      }
-
-                      String? noteText = await showDialog<String>(
-                        context: context,
-                        builder: (context) {
-                          TextEditingController controller =
-                              TextEditingController();
-                          return AlertDialog(
-                            title: const SelectableText('Add a Bookmark ✍️'),
-                            content: TextField(
-                              controller: controller,
-                              maxLines: 2,
-                              decoration: const InputDecoration(
-                                hintText: 'Write a short note...',
-                                border: OutlineInputBorder(),
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed:
-                                    () =>
-                                        Navigator.pop(context, controller.text),
-                                child: const Text('Save'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
-
-                      if (noteText != null && noteText.trim().isNotEmpty) {
-                        final prefs = await SharedPreferences.getInstance();
-                        List<String> notes = prefs.getStringList('notes') ?? [];
-                        notes.add(noteText.trim());
-                        await prefs.setStringList('notes', notes);
-
-                        // 🎉 Show confetti after saving
-                        showDialog(
-                          context: context,
-                          barrierDismissible: false,
-                          builder: (context) {
-                            ConfettiController _controllerCenter =
-                                ConfettiController(
-                                  duration: const Duration(seconds: 2),
-                                );
-                            _controllerCenter.play(); // Start the confetti!
-
-                            Future.delayed(const Duration(seconds: 2), () {
-                              _controllerCenter.stop();
-                              Navigator.of(context).pop(); // Auto close dialog
-                            });
-
-                            return Center(
-                              child: ConfettiWidget(
-                                confettiController:
-                                    _controllerCenter, // 💖 Must provide controller
-                                blastDirectionality:
-                                    BlastDirectionality.explosive,
-                                shouldLoop: false,
-                                numberOfParticles: 30,
-                                colors: const [
-                                  Colors.pinkAccent,
-                                  Colors.yellow,
-                                  Colors.redAccent,
-                                ],
-                                gravity: 0.3,
-                                emissionFrequency: 0.05,
-                                blastDirection: 0,
-                              ),
-                            );
-                          },
-                        );
-
-                        bool goToNotes =
-                            await showDialog<bool>(
-                              context: context,
-                              builder:
-                                  (context) => AlertDialog(
-                                    title: const SelectableText(
-                                      'Bookmark Saved! 📚',
-                                    ),
-                                    content: const SelectableText(
-                                      'Do you want to view your bookmarks now?',
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(context, false),
-                                        child: const SelectableText(
-                                          'No, stay here',
-                                        ),
-                                      ),
-                                      TextButton(
-                                        onPressed:
-                                            () => Navigator.pop(context, true),
-                                        child: const SelectableText(
-                                          'Yes, show bookmarks',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                            ) ??
-                            false;
-
-                        if (goToNotes) {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const NotesScreen(),
-                            ),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: SelectableText(
-                                'Bookmark saved successfully! ✅',
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                    },
-                    label: const SelectableText('Bookmark Title'),
-                    icon: const Icon(Icons.bookmark_add),
-                    backgroundColor: Colors.pink,
-                  ),
-            ),
-          );
-        }
-      },
+        ],
+      ),
     );
   }
 }

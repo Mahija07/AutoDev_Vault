@@ -28,7 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  shared_preferences: ^2.2.2
+  shared_preferences: ^2.0.11
   flutter:
     sdk: flutter
   http: ^0.13.4
@@ -38,6 +38,7 @@ dependencies:
   lottie: ^2.6.0
   firebase_core: ^2.27.0
   firebase_auth: ^4.17.4
+  google_sign_in: ^6.3.0
   cloud_firestore: ^4.8.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -86,6 +87,9 @@ flutter:
   -  assets/md/ECU.md
   -  assets/md/feedback.md
   -  assets/md/overview.md
+  -  assets/md/vehicle_architecture.md
+  -  assets/md/Questinnaire.md
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

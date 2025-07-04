@@ -23,6 +23,7 @@ android {
     }
 
     defaultConfig {
+        multiDexEnabled = true
         applicationId = "com.mahija.autodevvault"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
